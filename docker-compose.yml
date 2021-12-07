@@ -1,0 +1,25 @@
+version: "3"
+# The collection of applications composing this service
+services:
+  # The NGINX custom container
+  webserver:
+    # Instead of referencing image: nginx:mainline-alpine here, use build to
+    # reference the current directory (.), which will look for a dockerfile
+    # by default
+    image: nginx:latest
+    # The external directory location to map to an internal location
+    environment:
+      VIRTUAL_HOST: kalman.no
+      LETSENCRYPT_HOST: kalman.no
+      LETSENCRYPT_EMAIL: tordna@protonmail.com
+    volumes:
+      - ./html:/usr/share/nginx/html
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    # The external port mapping to internal port mapping
+    expose:
+      - 3000
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
